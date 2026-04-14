@@ -1,0 +1,99 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users/{userId}/settings
+    // Document ID: general
+    // Fields:
+    //   - logoBase64: string (optional, size < 1000000)
+    //   - tteIconBase64: string (optional, size < 1000000)
+    //
+    // Collection: users/{userId}/employees
+    // Document ID: {employeeId}
+    // Fields:
+    //   - id: string (required, size < 100)
+    //   - name: string (required, size < 200)
+    //   - nip: string (required, size < 100)
+    //   - pangkatGol: string (required, size < 100)
+    //   - jabatan: string (required, size < 200)
+    //   - createdAt: number (optional)
+    //
+    // Collection: users/{userId}/history
+    // Document ID: {historyId}
+    // Fields:
+    //   - id: string (required, size < 100)
+    //   - timestamp: number (required)
+    //   - formData: string (required, size < 1000000)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidOptionalString(field, minLen, maxLen) {
+      return !(field in request.resource.data) ||
+             (request.resource.data[field] is string &&
+              request.resource.data[field].size() >= minLen &&
+              request.resource.data[field].size() <= maxLen);
+    }
+
+    function isValidSettings() {
+      return isValidOptionalString('logoBase64', 0, 1000000) &&
+             isValidOptionalString('tteIconBase64', 0, 1000000);
+    }
+
+    function isValidEmployee() {
+      return request.resource.data.keys().hasAll(['id', 'name', 'nip', 'pangkatGol', 'jabatan']) &&
+             request.resource.data.id is string && request.resource.data.id.size() < 100 &&
+             request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() < 200 &&
+             request.resource.data.nip is string && request.resource.data.nip.size() < 100 &&
+             request.resource.data.pangkatGol is string && request.resource.data.pangkatGol.size() < 100 &&
+             request.resource.data.jabatan is string && request.resource.data.jabatan.size() < 200 &&
+             (!('order' in request.resource.data) || request.resource.data.order is number) &&
+             (!('createdAt' in request.resource.data) || request.resource.data.createdAt is number);
+    }
+
+    function isValidHistory() {
+      return request.resource.data.keys().hasAll(['id', 'timestamp', 'formData']) &&
+             request.resource.data.id is string && request.resource.data.id.size() < 100 &&
+             request.resource.data.timestamp is number &&
+             request.resource.data.formData is string && request.resource.data.formData.size() < 1000000;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      match /settings/general {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isValidSettings();
+      }
+
+      match /employees/{employeeId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isValidEmployee();
+        allow delete: if isOwner(userId);
+      }
+
+      match /history/{historyId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isValidHistory();
+        allow delete: if isOwner(userId);
+      }
+    }
+  }
+}

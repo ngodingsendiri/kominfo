@@ -1,0 +1,91 @@
+{
+  "entities": {
+    "UserSettings": {
+      "title": "UserSettings",
+      "description": "User specific settings like logos",
+      "type": "object",
+      "properties": {
+        "logoBase64": {
+          "type": "string",
+          "description": "Base64 encoded logo image"
+        },
+        "tteIconBase64": {
+          "type": "string",
+          "description": "Base64 encoded TTE icon image"
+        }
+      }
+    },
+    "Employee": {
+      "title": "Employee",
+      "description": "Employee data for generating letters",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Employee name"
+        },
+        "nip": {
+          "type": "string",
+          "description": "Employee NIP"
+        },
+        "pangkatGol": {
+          "type": "string",
+          "description": "Employee Pangkat/Golongan"
+        },
+        "jabatan": {
+          "type": "string",
+          "description": "Employee Jabatan"
+        },
+        "createdAt": {
+          "type": "number",
+          "description": "Creation timestamp"
+        }
+      },
+      "required": ["id", "name", "nip", "pangkatGol", "jabatan"]
+    },
+    "LetterHistory": {
+      "title": "LetterHistory",
+      "description": "History of generated letters",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier"
+        },
+        "timestamp": {
+          "type": "number",
+          "description": "Generation timestamp"
+        },
+        "formData": {
+          "type": "string",
+          "description": "JSON stringified LetterData"
+        }
+      },
+      "required": ["id", "timestamp", "formData"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/settings/general": {
+      "schema": {
+        "$ref": "#/entities/UserSettings"
+      },
+      "description": "General settings for the user"
+    },
+    "/users/{userId}/employees/{employeeId}": {
+      "schema": {
+        "$ref": "#/entities/Employee"
+      },
+      "description": "Employees belonging to the user"
+    },
+    "/users/{userId}/history/{historyId}": {
+      "schema": {
+        "$ref": "#/entities/LetterHistory"
+      },
+      "description": "History of generated letters for the user"
+    }
+  }
+}

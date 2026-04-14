@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "react-datepicker/dist/react-datepicker.css";
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-brand-50: #f8fafc;
+  --color-brand-100: #f1f5f9;
+  --color-brand-200: #e2e8f0;
+  --color-brand-300: #cbd5e1;
+  --color-brand-400: #94a3b8;
+  --color-brand-500: #64748b;
+  --color-brand-600: #475569;
+  --color-brand-700: #334155;
+  --color-brand-800: #1e293b;
+  --color-brand-900: #0f172a;
+  --color-brand-950: #020617;
+
+  /* Primary Action Color - Professional Deep Blue */
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased transition-colors duration-300;
+  }
+  
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  .grid-bg {
+    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+  }
+
+  .glass-card {
+    @apply bg-white border border-slate-200 shadow-sm rounded-xl transition-all duration-300;
+  }
+  
+  .input-field {
+    @apply w-full px-3 py-2 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none transition-all duration-200 text-sm placeholder:text-slate-400 font-medium;
+  }
+  
+  .btn-primary {
+    @apply px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-all duration-200 shadow-sm text-sm font-bold active:scale-[0.98] flex items-center justify-center gap-2 tracking-tight;
+  }
+  
+  .btn-secondary {
+    @apply px-4 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg hover:bg-slate-50 transition-all duration-200 text-sm font-semibold flex items-center justify-center gap-2;
+  }
+
+  /* React Datepicker Custom Styles */
+  .react-datepicker-wrapper {
+    @apply w-full;
+  }
+  
+  .react-datepicker {
+    @apply font-sans border border-slate-200 shadow-xl rounded-xl overflow-hidden bg-white;
+  }
+  
+  .react-datepicker__header {
+    @apply bg-slate-50 border-b border-slate-200 pt-3 pb-2;
+  }
+  
+  .react-datepicker__current-month, 
+  .react-datepicker-time__header, 
+  .react-datepicker-year-header {
+    @apply text-slate-800 font-bold text-sm;
+  }
+  
+  .react-datepicker__day-name, 
+  .react-datepicker__day, 
+  .react-datepicker__time-name {
+    @apply text-slate-700 w-8 h-8 leading-8 m-0.5 text-sm;
+  }
+  
+  .react-datepicker__day:hover, 
+  .react-datepicker__month-text:hover, 
+  .react-datepicker__quarter-text:hover, 
+  .react-datepicker__year-text:hover {
+    @apply bg-slate-100 rounded-lg;
+  }
+  
+  .react-datepicker__day--selected, 
+  .react-datepicker__day--keyboard-selected {
+    @apply bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-bold;
+  }
+  
+  .react-datepicker__time-container {
+    @apply border-l border-slate-200;
+  }
+  
+  .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item {
+    @apply h-auto py-2 text-sm;
+  }
+  
+  .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item:hover {
+    @apply bg-slate-100;
+  }
+  
+  .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected {
+    @apply bg-primary-600 text-white hover:bg-primary-700 font-bold;
+  }
+}
