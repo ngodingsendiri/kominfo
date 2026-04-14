@@ -90,6 +90,7 @@ export default function App() {
   });
 
   const [editingEmployee, setEditingEmployee] = useState<Partial<Employee> | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -761,7 +762,7 @@ export default function App() {
                   </button>
                 </div>
                 
-                <div className="flex items-center justify-between mt-3">
+                <div className="flex items-center justify-between mt-3 mb-3">
                   <button
                     onClick={downloadTemplate}
                     className="text-[9px] text-slate-400 hover:text-primary-600 transition-colors font-bold uppercase tracking-widest"
@@ -775,6 +776,21 @@ export default function App() {
                     accept=".xlsx, .xls" 
                     className="hidden" 
                   />
+                </div>
+
+                {/* Search Input */}
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Cari nama pegawai..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none transition-all placeholder:text-slate-400"
+                  />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-2.5 top-2.5 text-slate-400">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
                 </div>
               </div>
 
@@ -833,7 +849,7 @@ export default function App() {
 
               {/* Employee List */}
               <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-2 custom-scrollbar bg-slate-50/30 max-h-[400px] lg:max-h-none">
-                {employees.map((emp) => {
+                {employees.filter(emp => emp.name.toLowerCase().includes(searchQuery.toLowerCase())).map((emp) => {
                   const isSelected = formData.selectedEmployeeIds.includes(emp.id);
                   return (
                     <motion.div 

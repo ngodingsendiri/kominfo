@@ -1,5 +1,5 @@
 {
-  "name": "Remix: Generator Surat Tugas Jember",
-  "description": "Aplikasi sederhana untuk membuat Surat Tugas (Perseorangan \u0026 Kolektif) sesuai template Dinas Komunikasi dan Informatika Kabupaten Jember.",
+  "name": "kominfo",
+  "description": "Aplikasi Administrasi Dinas Komunikasi dan Informatika Kabupaten Jember.",
   "requestFramePermissions": []
 }
