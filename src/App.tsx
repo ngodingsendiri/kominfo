@@ -106,7 +106,14 @@ export default function App() {
       return;
     }
 
-    const employeesPath = `users/${user.uid}/employees`;
+    const ADMIN_EMAILS = ['ngerjaindiri@gmail.com', 'sipencil@gmail.com', 'abiemputra.asn@gmail.com'];
+    const isAdmin = user.email && ADMIN_EMAILS.includes(user.email);
+
+    if (!isAdmin) {
+      return;
+    }
+
+    const employeesPath = `shared/data/employees`;
     const unsubscribeEmployees = onSnapshot(collection(db, employeesPath), (snapshot) => {
       const emps: Employee[] = [];
       snapshot.forEach((doc) => {
@@ -117,7 +124,7 @@ export default function App() {
       handleFirestoreError(error, OperationType.LIST, employeesPath);
     });
 
-    const historyPath = `users/${user.uid}/history`;
+    const historyPath = `shared/data/history`;
     const q = query(collection(db, historyPath), orderBy("timestamp", "desc"));
     const unsubscribeHistory = onSnapshot(q, (snapshot) => {
       const hist: LetterHistory[] = [];
@@ -129,7 +136,7 @@ export default function App() {
       handleFirestoreError(error, OperationType.LIST, historyPath);
     });
 
-    const settingsPath = `users/${user.uid}/settings/general`;
+    const settingsPath = `shared/data/settings/general`;
     const unsubscribeSettings = onSnapshot(doc(db, settingsPath), (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -152,7 +159,7 @@ export default function App() {
 
   const updateSettings = async (updates: Partial<LetterData>) => {
     if (!user) return;
-    const settingsPath = `users/${user.uid}/settings/general`;
+    const settingsPath = `shared/data/settings/general`;
     try {
       const payload: Record<string, string> = {};
       if (updates.logoBase64 !== undefined) payload.logoBase64 = updates.logoBase64;
@@ -176,7 +183,7 @@ export default function App() {
         order: editingEmployee.order || Date.now(),
       };
       
-      const path = `users/${user.uid}/employees/${employeeId}`;
+      const path = `shared/data/employees/${employeeId}`;
       try {
         await setDoc(doc(db, path), employee);
       } catch (error) {
@@ -189,7 +196,7 @@ export default function App() {
 
   const handleDeleteEmployee = async (id: string) => {
     if (!user) return;
-    const path = `users/${user.uid}/employees/${id}`;
+    const path = `shared/data/employees/${id}`;
     try {
       await deleteDoc(doc(db, path));
     } catch (error) {
@@ -221,7 +228,7 @@ export default function App() {
       timestamp: Date.now(),
       formData: JSON.stringify(formData),
     };
-    const path = `users/${user.uid}/history/${historyId}`;
+    const path = `shared/data/history/${historyId}`;
     try {
       await setDoc(doc(db, path), historyItem);
     } catch (error) {
@@ -278,7 +285,7 @@ export default function App() {
 
         if (newEmployees.length > 0 && user) {
           newEmployees.forEach(async (emp) => {
-            const path = `users/${user.uid}/employees/${emp.id}`;
+            const path = `shared/data/employees/${emp.id}`;
             try {
               await setDoc(doc(db, path), emp);
             } catch (error) {
@@ -317,6 +324,9 @@ export default function App() {
     return <div className="min-h-screen flex items-center justify-center bg-slate-50">Loading...</div>;
   }
 
+  const ADMIN_EMAILS = ['ngerjaindiri@gmail.com', 'sipencil@gmail.com', 'abiemputra.asn@gmail.com'];
+  const isAdmin = user?.email && ADMIN_EMAILS.includes(user.email);
+
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
@@ -332,6 +342,29 @@ export default function App() {
           >
             <LogIn size={20} />
             Masuk dengan Google
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
+        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center border border-slate-100">
+          <div className="bg-red-100 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6">
+            <X size={32} className="text-red-600" />
+          </div>
+          <h1 className="text-2xl font-bold text-slate-900 mb-2">Akses Ditolak</h1>
+          <p className="text-slate-500 mb-8">
+            Akun <strong>{user.email}</strong> tidak memiliki akses admin ke aplikasi ini.
+          </p>
+          <button
+            onClick={handleLogout}
+            className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-sm"
+          >
+            <LogOut size={20} />
+            Keluar
           </button>
         </div>
       </div>

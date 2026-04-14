@@ -43,6 +43,10 @@
         "createdAt": {
           "type": "number",
           "description": "Creation timestamp"
+        },
+        "order": {
+          "type": "number",
+          "description": "Display order"
         }
       },
       "required": ["id", "name", "nip", "pangkatGol", "jabatan"]
@@ -69,23 +73,23 @@
     }
   },
   "firestore": {
-    "/users/{userId}/settings/general": {
+    "/shared/data/settings/general": {
       "schema": {
         "$ref": "#/entities/UserSettings"
       },
-      "description": "General settings for the user"
+      "description": "Shared general settings for admins"
     },
-    "/users/{userId}/employees/{employeeId}": {
+    "/shared/data/employees/{employeeId}": {
       "schema": {
         "$ref": "#/entities/Employee"
       },
-      "description": "Employees belonging to the user"
+      "description": "Shared employees for admins"
     },
-    "/users/{userId}/history/{historyId}": {
+    "/shared/data/history/{historyId}": {
       "schema": {
         "$ref": "#/entities/LetterHistory"
       },
-      "description": "History of generated letters for the user"
+      "description": "Shared history of generated letters for admins"
     }
   }
 }
